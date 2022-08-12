@@ -835,6 +835,25 @@ extension JSON {
             object = newValue
         }
     }
+
+    //Non-optional lossless number
+    public var lossLessNumberValue: NSNumber {
+        get {
+            switch type {
+            case .string:
+                if let string = object as? String, let number = NumberFormatter().number(from: string) {
+                    return number
+                }
+                return NSNumber(value: 0)
+            case .number: return object as? NSNumber ?? NSNumber(value: 0)
+            case .bool: return NSNumber(value: rawBool ? 1 : 0)
+            default: return NSNumber(value: 0.0)
+            }
+        }
+        set {
+            object = newValue
+        }
+    }
 }
 
 // MARK: - Null
@@ -914,6 +933,15 @@ extension JSON {
         }
     }
 
+    public var lossLessDoubleValue: Double {
+        get {
+            return lossLessNumberValue.doubleValue
+        }
+        set {
+            object = NSNumber(value: newValue)
+        }
+    }
+
     public var float: Float? {
         get {
             return number?.floatValue
@@ -930,6 +958,15 @@ extension JSON {
     public var floatValue: Float {
         get {
             return numberValue.floatValue
+        }
+        set {
+            object = NSNumber(value: newValue)
+        }
+    }
+
+    public var lossLessFloatValue: Float {
+        get {
+            return lossLessNumberValue.floatValue
         }
         set {
             object = NSNumber(value: newValue)
