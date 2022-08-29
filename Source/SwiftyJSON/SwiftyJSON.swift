@@ -841,8 +841,12 @@ extension JSON {
         get {
             switch type {
             case .string:
-                if let string = object as? String, let number = NumberFormatter().number(from: string) {
-                    return number
+                if let string = object as? String {
+                    let formatter = NumberFormatter()
+                    formatter.locale = Locale(identifier: "en_US")
+                    if let number = formatter.number(from: string) {
+                        return number
+                    }
                 }
                 return NSNumber(value: 0)
             case .number: return object as? NSNumber ?? NSNumber(value: 0)
